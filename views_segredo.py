@@ -1,25 +1,25 @@
 from flask import render_template, request, redirect, session, flash, url_for, send_from_directory
-from jogoteca import app, db
-from models import Jogos
-from helpers import recupera_imagem, deleta_arquivo, FormularioJogo
+from segredo import app, db
+from models import Segredo
+from helpers import recupera_imagem, deleta_arquivo, Formulariosegredo
 import time
 
 
 @app.route('/')
 def index():
-    lista = Jogos.query.order_by(Jogos.id)
+    lista = Segredo.query.order_by(Segredo.id)
     return render_template('lista.html', titulo='Segredo', jogos=lista)
 
 @app.route('/novo')
 def novo():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect(url_for('login', proxima=url_for('novo')))
-    form = FormularioJogo()
+    form = Formulariosegredo()
     return render_template('novo.html', titulo='SENHA', form=form)
 
 @app.route('/criar', methods=['POST',])
 def criar():
-    form = FormularioJogo(request.form)
+    form = Formulariosegredo(request.form)
 
     if not form.validate_on_submit():
         return redirect(url_for('novo'))
@@ -27,13 +27,13 @@ def criar():
     nome = form.nome.data
 
 
-    jogo = Jogos.query.filter_by(nome=nome).first()
+    segredo = Segredo.query.filter_by(nome=nome).first()
 
-    if jogo:
+    if segredo:
         flash('já existente!')
         return redirect(url_for('index'))
 
-    novo_jogo = Jogos(nome=nome)
+    novo_jogo = Segredo(nome=nome)
     db.session.add(novo_jogo)
     db.session.commit()
 
@@ -48,18 +48,18 @@ def criar():
 def editar(id):
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect(url_for('login', proxima=url_for('editar', id=id)))
-    jogo = Jogos.query.filter_by(id=id).first()
-    form = FormularioJogo()
+    jogo = Segredo.query.filter_by(id=id).first()
+    form = Formulariosegredo()
     form.nome.data = jogo.nome
     capa_jogo = recupera_imagem(id)
     return render_template('editar.html', titulo='Editando Mensagem', id=id, capa_jogo=capa_jogo, form=form)
 
 @app.route('/atualizar', methods=['POST',])
 def atualizar():
-    form = FormularioJogo(request.form)
+    form = Formulariosegredo(request.form)
 
     if form.validate_on_submit():
-        jogo = Jogos.query.filter_by(id=request.form['id']).first()
+        jogo = Segredo.query.filter_by(id=request.form['id']).first()
         jogo.nome = form.nome.data
 
 
@@ -79,7 +79,7 @@ def deletar(id):
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect(url_for('login'))
 
-    Jogos.query.filter_by(id=id).delete()
+    Segredo.query.filter_by(id=id).delete()
     db.session.commit()
     flash('Deletado com sucesso!')
 

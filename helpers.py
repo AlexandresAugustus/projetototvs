@@ -1,9 +1,9 @@
 import os
-from jogoteca import app
+from segredo import app
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, validators
 
-class FormularioJogo(FlaskForm):
+class Formulariosegredo(FlaskForm):
     nome = StringField('Segredo', [validators.DataRequired(), validators.Length(min=1, max=50)])
     salvar = SubmitField('Salvar')
 
