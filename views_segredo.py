@@ -33,14 +33,14 @@ def criar():
         flash('já existente!')
         return redirect(url_for('index'))
 
-    novo_jogo = Segredo(nome=nome)
-    db.session.add(novo_jogo)
+    segredo_jogo = Segredo(nome=nome)
+    db.session.add(segredo_jogo)
     db.session.commit()
 
     arquivo = request.files['arquivo']
     upload_path = app.config['UPLOAD_PATH']
     timestamp = time.time()
-    arquivo.save(f'{upload_path}/capa{novo_jogo.id}-{timestamp}.jpg')
+    arquivo.save(f'{upload_path}/capa{segredo_jogo.id}-{timestamp}.jpg')
 
     return redirect(url_for('index'))
 
@@ -48,9 +48,9 @@ def criar():
 def editar(id):
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect(url_for('login', proxima=url_for('editar', id=id)))
-    jogo = Segredo.query.filter_by(id=id).first()
+    segredo = Segredo.query.filter_by(id=id).first()
     form = Formulariosegredo()
-    form.nome.data = jogo.nome
+    form.nome.data = segredo.nome
     capa_jogo = recupera_imagem(id)
     return render_template('editar.html', titulo='Editando Mensagem', id=id, capa_jogo=capa_jogo, form=form)
 
