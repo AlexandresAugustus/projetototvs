@@ -51,26 +51,26 @@ def editar(id):
     segredo = Segredo.query.filter_by(id=id).first()
     form = Formulariosegredo()
     form.nome.data = segredo.nome
-    capa_jogo = recupera_imagem(id)
-    return render_template('editar.html', titulo='Editando Mensagem', id=id, capa_jogo=capa_jogo, form=form)
+    capa_segredo = recupera_imagem(id)
+    return render_template('editar.html', titulo='Editando Mensagem', id=id, capa_segrado=capa_segredo, form=form)
 
 @app.route('/atualizar', methods=['POST',])
 def atualizar():
     form = Formulariosegredo(request.form)
 
     if form.validate_on_submit():
-        jogo = Segredo.query.filter_by(id=request.form['id']).first()
-        jogo.nome = form.nome.data
+        segredo = Segredo.query.filter_by(id=request.form['id']).first()
+        segredo.nome = form.nome.data
 
 
-        db.session.add(jogo)
+        db.session.add(segredo)
         db.session.commit()
 
         arquivo = request.files['arquivo']
         upload_path = app.config['UPLOAD_PATH']
         timestamp = time.time()
         deleta_arquivo(id)
-        arquivo.save(f'{upload_path}/capa{jogo.id}-{timestamp}.jpg')
+        arquivo.save(f'{upload_path}/capa{segredo.id}-{timestamp}.jpg')
 
     return redirect(url_for('index'))
 
