@@ -33,14 +33,14 @@ def criar():
         flash('já existente!')
         return redirect(url_for('index'))
 
-    segredo_jogo = Segredo(nome=nome)
+    segredo_novo = Segredo(nome=nome)
     db.session.add(segredo_jogo)
     db.session.commit()
 
     arquivo = request.files['arquivo']
     upload_path = app.config['UPLOAD_PATH']
     timestamp = time.time()
-    arquivo.save(f'{upload_path}/capa{segredo_jogo.id}-{timestamp}.jpg')
+    arquivo.save(f'{upload_path}/capa{segredo_novo.id}-{timestamp}.jpg')
 
     return redirect(url_for('index'))
 
